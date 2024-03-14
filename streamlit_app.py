@@ -35,11 +35,11 @@ with st.sidebar:
             "Informal",
             "Formal",
         ],
-        help="Select how formal you want the conversation to be.",
+        help="Select how conversations formality register.",
     )
     translation_on = st.toggle(
-        "English translation",
-        help="Check this to receive conversations with English translations.",
+        "English explinations",
+        help="Check this to receive conversations with English translations and explinations.",
     )
     highlight_mistakes_on = st.toggle(
         "Show common mistakes",
@@ -49,16 +49,6 @@ with st.sidebar:
 # Button to clear responses
 if st.button("Clear All Responses"):
     st.session_state["responses"] = []  # Reset the list of responses
-
-
-def display_response(response):
-    # Custom styling for the response display
-    response_html = f"""
-    <div style="border-left: 5px solid #4CAF50; background-color: #f2f2f2; padding: 10px; margin: 10px 0;">
-        <p>{response}</p>
-    </div>
-    """
-    st.markdown(response_html, unsafe_allow_html=True)
 
 
 def refine_template(
@@ -200,11 +190,14 @@ if submitted:
             highlight_mistakes_on,
         )
 
-
 for response in st.session_state["responses"]:
     st.info(response)
 
 
-# Edit with HTML
+# This highlights the word but does not save chat and does not look great
+# def highlight_vocabulary(response, vocab):
+#     highlighted_response = response.replace(vocab, f"<mark>{vocab}</mark>")
+#     return highlighted_response
 # for response in st.session_state["responses"]:
-#     display_response(response)
+#     highlighted_response = highlight_vocabulary(response, vocab_text)
+#     st.markdown(highlighted_response, unsafe_allow_html=True)

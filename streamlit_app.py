@@ -63,7 +63,7 @@ def refine_template(
     translation_request = (
         "Provide an English translation. Include explanations for cultural or contextual nuances where necessary"
         if translation_on
-        else "Give the scenario in English, but do not translate the dialogue."
+        else "Do not translate the dialogue."
     )
     mistakes_request = (
         f"Highlight common mistakes learners might make with '{vocab}', and rectify them by providing 2-3 exemplar sentences that correct these errors."
@@ -71,7 +71,7 @@ def refine_template(
         else ""
     )
 
-    template = f"Construct a dialogue in {practice_language}, tailored to CEFR level {learner_level}, consisting of 3-5 exchanges. Your task is to weave the target word '{vocab}' into a scenario that fits the theme/context, {conversation_context}. Aim for a {formality} formality register. {mistakes_request} {translation_request} Begin with a brief description of the scenario. This setup should establish the theme/context and provide a backdrop for the dialogue. Make sure it's clear and engaging, setting the stage for the language interaction.."
+    template = f"Construct a dialogue in {practice_language}, tailored to CEFR level {learner_level}, consisting of 3-5 exchanges. Your task is to weave the target word '{vocab}' into a scenario that fits the theme/context, {conversation_context}. Aim for a {formality} formality register. {mistakes_request} {translation_request} Begin with a brief description of the scenario. This setup should establish the theme/context and provide a backdrop for the dialogue. Make sure it's clear and engaging, setting the stage for the language interaction."
 
     return template
 

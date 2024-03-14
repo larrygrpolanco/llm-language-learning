@@ -61,16 +61,17 @@ def refine_template(
     highlight_mistakes_on,
 ):
     translation_request = (
-        "Also provide an English translation. Include explanations for cultural or contextual nuances where necessary"
+        "Provide an English translation. Include explanations for cultural or contextual nuances where necessary"
         if translation_on
-        else ""
+        else "Give the scenario in English, but do not translate the dialogue."
     )
     mistakes_request = (
         f"Highlight common mistakes learners might make with '{vocab}', and rectify them by providing 2-3 exemplar sentences that correct these errors."
         if highlight_mistakes_on
         else ""
     )
-    template = f"Construct a dialogue in {practice_language} tailored to CEFR level {learner_level}, consisting of 3-5 exchanges. Your task is to weave the target word '{vocab}' into a scenario that fits the theme/context, {conversation_context}. Aim for a {formality} formality register. {mistakes_request} {translation_request} Always format your response with scenario: followed by dialogue."
+
+    template = f"Construct a dialogue in {practice_language}, tailored to CEFR level {learner_level}, consisting of 3-5 exchanges. Your task is to weave the target word '{vocab}' into a scenario that fits the theme/context, {conversation_context}. Aim for a {formality} formality register. {mistakes_request} {translation_request} Begin with a brief description of the scenario. This setup should establish the theme/context and provide a backdrop for the dialogue. Make sure it's clear and engaging, setting the stage for the language interaction.."
 
     return template
 
@@ -199,12 +200,3 @@ if submitted:
 
 for response in st.session_state["responses"]:
     st.info(response)
-
-
-# This highlights the word but does not save chat and does not look great
-# def highlight_vocabulary(response, vocab):
-#     highlighted_response = response.replace(vocab, f"<mark>{vocab}</mark>")
-#     return highlighted_response
-# for response in st.session_state["responses"]:
-#     highlighted_response = highlight_vocabulary(response, vocab_text)
-#     st.markdown(highlighted_response, unsafe_allow_html=True)

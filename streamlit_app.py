@@ -7,7 +7,7 @@ google_api_key = st.secrets["GOOGLE_API_KEY"]
 
 st.title("Conversation Dictionary")
 st.caption(
-    "Disclaimer: this dictionary may not always provide perfect translations or contextual examples; please cross-check and be prepared to explore different usage examples."
+    "Disclaimer: This dictionary may not always provide perfect translations or contextual examples; please cross-check and be prepared to explore different usage examples."
 )
 
 
@@ -61,7 +61,7 @@ def refine_template(
     highlight_mistakes_on,
 ):
     translation_request = (
-        "Also provide an English translation. When providing the English translation, include explanations for cultural or contextual nuances where necessary"
+        "Also provide an English translation. Include explanations for cultural or contextual nuances where necessary"
         if translation_on
         else ""
     )
@@ -70,7 +70,7 @@ def refine_template(
         if highlight_mistakes_on
         else ""
     )
-    template = f"Construct a dialogue in {practice_language} tailored to CEFR level {learner_level}, consisting of 3-5 exchanges. Your task is to weave the target word '{vocab}' into a scenario that fits the theme/context, {conversation_context}. Aim for a {formality} formality register. {mistakes_request} {translation_request}"
+    template = f"Construct a dialogue in {practice_language} tailored to CEFR level {learner_level}, consisting of 3-5 exchanges. Your task is to weave the target word '{vocab}' into a scenario that fits the theme/context, {conversation_context}. Aim for a {formality} formality register. {mistakes_request} {translation_request} Always format your response with scenario: followed by dialogue."
 
     return template
 

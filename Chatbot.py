@@ -7,6 +7,10 @@ google_api_key = st.secrets["GOOGLE_API_KEY"]
 
 st.title("Conversation Dictionary")
 
+# Button to clear responses
+if st.button("Clear All Responses"):
+    st.session_state["responses"] = []  # Reset the list of responses
+
 with st.sidebar:
     st.title("Language Settings")
     practice_language = st.text_input("Which language are you learning?", "Chinese")
@@ -51,9 +55,16 @@ def generate_convo(
     # Run LLM model
     response = llm(prompt_query)
 
-    # Print results
-    return st.info(response)
+    # Append new response to the start of the list so it appears at the top
+    st.session_state["responses"].insert(0, response)
+    return response  # Now generate_convo returns the response but also stores it in session state
 
+    # Print results
+    # return st.info(response)
+
+
+if "responses" not in st.session_state:
+    st.session_state["responses"] = []
 
 # UI for input outside of the settings, so users can submit words anytime.
 with st.form("myform"):
@@ -72,3 +83,7 @@ if submitted:
         conversation_context,
         translation_on,
     )
+
+# Display stored responses
+for response in st.session_state["responses"]:
+    st.info(response)

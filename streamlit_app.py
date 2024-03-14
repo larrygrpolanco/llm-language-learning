@@ -15,7 +15,7 @@ with st.sidebar:
     st.title("Language Settings")
     practice_language = st.text_input(
         "Language",
-        "Chinese",
+        placeholder="Chinese w/pinyin",
         help="Enter the language you're learning, e.g., Chinese, Spanish.",
     )
     learner_level = st.select_slider(
@@ -28,9 +28,22 @@ with st.sidebar:
         placeholder="Ordering food at a restaurant",
         help="Specify a context to focus the conversation, e.g., ordering at a restaurant, asking for directions.",
     )
+    formality = st.selectbox(
+        "Formality",
+        [
+            "Balanced",
+            "Informal",
+            "Formal",
+        ],
+        help="Select how formal you want the conversation to be.",
+    )
     translation_on = st.toggle(
         "English translation",
         help="Check this to receive conversations with English translations.",
+    )
+    highlight_mistakes_on = st.toggle(
+        "Show common mistakes",
+        help="Check this to show common mistakes learners might make.",
     )
 
 # Button to clear responses
@@ -49,14 +62,26 @@ def display_response(response):
 
 
 def refine_template(
-    vocab, practice_language, learner_level, conversation_context, translation_on
+    vocab,
+    practice_language,
+    learner_level,
+    conversation_context,
+    translation_on,
+    formality,
+    highlight_mistakes_on,
 ):
     translation_request = (
         "Also provide an English translation. When providing the English translation, include explanations for cultural or contextual nuances where necessary"
         if translation_on
         else ""
     )
-    template = f"In {practice_language}, create a concise, engaging conversation of about 3-5 exchanges at the CEFR level {learner_level}, using the word '{vocab}' in a context that is {conversation_context}. Please include a mixture of formal and informal uses if applicable. Highlight any common errors in the use of '{vocab}' and provide 2-3 sentences showcasing correct usage outside of the conversation.{translation_request}"
+    mistakes_request = (
+        f"Highlight common mistakes learners might make with '{vocab}', and rectify them by providing 2-3 exemplar sentences that correct these errors."
+        if highlight_mistakes_on
+        else ""
+    )
+    template = f"Construct a dialogue in {practice_language} tailored to CEFR level {learner_level}, consisting of 3-5 exchanges. Your task is to weave the target word '{vocab}' into a scenario that fits the theme/context, {conversation_context}. Aim for a {formality} formality register. {mistakes_request} {translation_request}"
+
     return template
 
 
@@ -67,6 +92,8 @@ def create_prompt(
     vocab,
     conversation_context,
     translation_request,
+    formality,
+    mistakes_request,
 ):
     prompt = PromptTemplate(
         input_variables=[
@@ -75,6 +102,8 @@ def create_prompt(
             "learner_level",
             "conversation_context",
             "translation_request",
+            "formality",
+            "mistakes_request",
         ],
         template=template,
     )
@@ -84,24 +113,40 @@ def create_prompt(
         vocab=vocab,
         conversation_context=conversation_context,
         translation_request=translation_request,
+        formality=formality,
+        mistakes_request=mistakes_request,
     )
     return prompt_query
 
 
 def generate_convo(
-    vocab, practice_language, learner_level, conversation_context, translation_on
+    vocab,
+    practice_language,
+    learner_level,
+    conversation_context,
+    translation_on,
+    formality,
+    highlight_mistakes_on,
 ):
 
     if not vocab.strip():
-        st.error("Vocabulary cannot be empty.")
+        st.warning("Give a vocabulary word.")
+        return None
     if not practice_language.strip():
-        st.error("Practice language cannot be empty.")
+        st.warning("Set your langauge in the sidebar located at the top left.")
+        return None
 
     # Instantiate LLM model
     llm = GoogleGenerativeAI(model="gemini-pro", google_api_key=google_api_key)
 
     template = refine_template(
-        vocab, practice_language, learner_level, conversation_context, translation_on
+        vocab,
+        practice_language,
+        learner_level,
+        conversation_context,
+        translation_on,
+        formality,
+        highlight_mistakes_on,
     )
 
     prompt_query = create_prompt(
@@ -111,6 +156,8 @@ def generate_convo(
         vocab,
         conversation_context,
         translation_on,
+        formality,
+        highlight_mistakes_on,
     )
 
     # Run LLM model
@@ -120,7 +167,7 @@ def generate_convo(
     st.session_state["responses"].insert(0, response)
 
     # Limit the number of responses to a specific max value, e.g., 10
-    max_responses = 10
+    max_responses = 5
     if len(st.session_state["responses"]) > max_responses:
         # Remove the oldest response(s) to maintain only a max number of responses
         st.session_state["responses"] = st.session_state["responses"][:max_responses]
@@ -141,16 +188,19 @@ with st.form("myform"):
     submitted = st.form_submit_button("Submit")
 
 if submitted:
-    # Call generate_convo with the input and settings anytime a word is submitted
-    generate_convo(
-        vocab_text,
-        practice_language,
-        learner_level,
-        conversation_context,
-        translation_on,
-    )
+    with st.spinner("Creating your dialogue..."):
+        # Call generate_convo with the input and settings anytime a word is submitted
+        generate_convo(
+            vocab_text,
+            practice_language,
+            learner_level,
+            conversation_context,
+            translation_on,
+            formality,
+            highlight_mistakes_on,
+        )
 
-# Display stored responses
+
 for response in st.session_state["responses"]:
     st.info(response)
 

@@ -38,7 +38,7 @@ with st.sidebar:
         help="Select how conversations formality register.",
     )
     translation_on = st.toggle(
-        "English explinations",
+        "English explanations",
         help="Check this to receive conversations with English translations and explinations.",
     )
     highlight_mistakes_on = st.toggle(
@@ -120,7 +120,7 @@ def generate_convo(
 ):
 
     if not vocab.strip():
-        st.warning("Give a vocabulary word.")
+        st.warning("Enter a vocabulary word.")
         return None
     if not practice_language.strip():
         st.warning("Set your langauge in the sidebar located at the top left.")

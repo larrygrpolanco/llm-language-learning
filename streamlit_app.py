@@ -126,43 +126,50 @@ def generate_convo(
         st.warning("Set your langauge in the sidebar located at the top left.")
         return None
 
-    # Instantiate LLM model
-    llm = GoogleGenerativeAI(model="gemini-pro", google_api_key=google_api_key)
+    try:
+        # Instantiate LLM model
+        llm = GoogleGenerativeAI(model="gemini-pro", google_api_key=google_api_key)
 
-    template = refine_template(
-        vocab,
-        practice_language,
-        learner_level,
-        conversation_context,
-        translation_on,
-        formality,
-        highlight_mistakes_on,
-    )
+        template = refine_template(
+            vocab,
+            practice_language,
+            learner_level,
+            conversation_context,
+            translation_on,
+            formality,
+            highlight_mistakes_on,
+        )
 
-    prompt_query = create_prompt(
-        template,
-        practice_language,
-        learner_level,
-        vocab,
-        conversation_context,
-        translation_on,
-        formality,
-        highlight_mistakes_on,
-    )
+        prompt_query = create_prompt(
+            template,
+            practice_language,
+            learner_level,
+            vocab,
+            conversation_context,
+            translation_on,
+            formality,
+            highlight_mistakes_on,
+        )
 
-    # Run LLM model
-    response = llm(prompt_query)
+        # Run LLM model
+        response = llm(prompt_query)
 
-    # Append new response to the start of the list so it appears at the top
-    st.session_state["responses"].insert(0, response)
+        # Append new response to the start of the list so it appears at the top
+        st.session_state["responses"].insert(0, response)
 
-    # Limit the number of responses to a specific max value, e.g., 10
-    max_responses = 5
-    if len(st.session_state["responses"]) > max_responses:
-        # Remove the oldest response(s) to maintain only a max number of responses
-        st.session_state["responses"] = st.session_state["responses"][:max_responses]
+        # Limit the number of responses to a specific max value, e.g., 10
+        max_responses = 5
+        if len(st.session_state["responses"]) > max_responses:
+            # Remove the oldest response(s) to maintain only a max number of responses
+            st.session_state["responses"] = st.session_state["responses"][
+                :max_responses
+            ]
 
-    return response  # Now generate_convo returns the response but also stores it in session state
+    except Exception as e:
+        st.error(f"An error occurred: {e}")
+        return None  # Return None if an exception occurred
+
+    return response
 
 
 if "responses" not in st.session_state:

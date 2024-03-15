@@ -43,7 +43,7 @@ with st.sidebar:
         native_language = st.text_input(
             "Preferred Language",
             value="English",
-            # help="Set the language for the explanations.",
+            help="Set the language for the explanations.",
         )
         translation_on = st.toggle(
             f"{native_language} explanations",

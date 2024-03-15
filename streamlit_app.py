@@ -64,13 +64,10 @@ with st.sidebar:
             [
                 "Google Gemini-Pro",
                 "OpenAI ChatGPT 4",
-                "Meta LLama 2",
+                # "Meta LLama 2",
             ],  # Add other LLMs as needed
             index=0,  # Default to the first option
             help="Select the Language Model to generate conversations. Some models are not free.",
-        )
-        custom_api_key = st.text_input(
-            "API Key", type="password", help="Use your personal API key."
         )
 
         template_editing = st.expander("Edit Prompt Template", expanded=False)
@@ -87,6 +84,10 @@ with st.sidebar:
                 # Save the user modified template to session state or use it directly for generation
                 st.session_state["user_template"] = user_template
                 st.success("Template saved successfully!")
+
+        custom_api_key = st.text_input(
+            "API Key", type="password", help="Use your personal API key."
+        )
 
 
 # Button to clear responses
@@ -206,7 +207,6 @@ def generate_convo(
             llm = GoogleGenerativeAI(
                 model="gemini-pro", google_api_key=effective_api_key
             )
-        ### I would need to reorganize how the request is handled to make this work. Right now it keeps everything in english.
         elif llm_choice == "OpenAI ChatGPT 4":
             # Use custom API key if provided, otherwise default to the stored API key
             effective_api_key = (
@@ -214,7 +214,7 @@ def generate_convo(
             )
             client = OpenAI(api_key=effective_api_key)
         elif llm_choice == "Meta LLama 2":
-            # Instantiate another LLM here
+            # Instantiate LLama 2
             llm = None  # Placeholder for other LLM instantiation
         else:
             raise ValueError("Unsupported LLM selected")

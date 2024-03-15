@@ -13,38 +13,47 @@ st.caption(
 
 with st.sidebar:
     st.title("Language Settings")
-    practice_language = st.text_input(
-        "Language",
-        placeholder="Chinese w/pinyin",
-        help="Enter the language you're learning, e.g., Chinese, Spanish.",
-    )
-    learner_level = st.select_slider(
-        "CEFR Level",
-        ["A1", "A2", "B1", "B2", "C1", "C2"],
-        help="Select your current proficiency level according to the CEFR framework.",
-    )
-    conversation_context = st.text_area(
-        "Context",
-        placeholder="Ordering food at a restaurant",
-        help="Specify a context to focus the conversation, e.g., ordering at a restaurant, asking for directions.",
-    )
-    formality = st.selectbox(
-        "Formality",
-        [
-            "Balanced",
-            "Informal",
-            "Formal",
-        ],
-        help="Select how conversations formality register.",
-    )
-    translation_on = st.toggle(
-        "English explanations",
-        help="Check this to receive conversations with English translations and explinations.",
-    )
-    highlight_mistakes_on = st.toggle(
-        "Show common mistakes",
-        help="Check this to show common mistakes learners might make.",
-    )
+    sidebar_tab1, sidebar_tab2 = st.tabs(["Details", "Feedback"])
+
+    with sidebar_tab1:
+        practice_language = st.text_input(
+            "Target Language",
+            placeholder="Chinese w/pinyin",
+            help="Enter the language you're learning, e.g., Chinese, Spanish.",
+        )
+        learner_level = st.select_slider(
+            "CEFR Level",
+            ["A1", "A2", "B1", "B2", "C1", "C2"],
+        )
+        conversation_context = st.text_area(
+            "Context",
+            placeholder="Ordering food at a restaurant",
+            help="Specify a context to focus the conversation, e.g., ordering at a restaurant, asking for directions.",
+        )
+        formality = st.selectbox(
+            "Formality",
+            [
+                "Balanced",
+                "Informal",
+                "Formal",
+            ],
+        )
+
+    with sidebar_tab2:
+        native_language = st.text_input(
+            "Preferred Language",
+            value="English",
+            help="Set the language for the explanations.",
+        )
+        translation_on = st.toggle(
+            f"{native_language} explanations",
+            help=f"Check this to receive conversations with {native_language} translations and explinations.",
+        )
+        highlight_mistakes_on = st.toggle(
+            "Show common mistakes",
+            help="Check this to show common mistakes learners might make.",
+        )
+
 
 # Button to clear responses
 if st.button("Clear All Responses"):
@@ -59,9 +68,10 @@ def refine_template(
     translation_on,
     formality,
     highlight_mistakes_on,
+    preferred_language,
 ):
     translation_request = (
-        "Provide an English translation. Include explanations for cultural or contextual nuances where necessary"
+        "Provide a translation. Include explanations for cultural or contextual nuances where necessary"
         if translation_on
         else "Do not translate the dialogue."
     )
@@ -71,7 +81,7 @@ def refine_template(
         else ""
     )
 
-    template = f"Construct a dialogue in {practice_language}, tailored to CEFR level {learner_level}, consisting of 3-5 exchanges. Your task is to weave the target word '{vocab}' into a scenario that fits the theme/context, {conversation_context}. Aim for a {formality} formality register. {mistakes_request} {translation_request} Begin with a brief description of the scenario. This setup should establish the theme/context and provide a backdrop for the dialogue. Make sure it's clear and engaging, setting the stage for the language interaction."
+    template = f"Construct a dialogue in {practice_language}, tailored to CEFR level {learner_level}, consisting of 3-5 exchanges. Your task is to weave the target word '{vocab}' into a scenario that fits the theme/context, {conversation_context}. Aim for a {formality} formality register. Begin with a brief description of the scenario in the students preferred_language, {preferred_language}. This setup should establish the theme/context and provide a backdrop for the dialogue. Make sure it's clear and engaging, setting the stage for the language interaction. {mistakes_request} {translation_request} "
 
     return template
 
@@ -85,6 +95,7 @@ def create_prompt(
     translation_request,
     formality,
     mistakes_request,
+    preferred_language,
 ):
     prompt = PromptTemplate(
         input_variables=[
@@ -95,6 +106,7 @@ def create_prompt(
             "translation_request",
             "formality",
             "mistakes_request",
+            "preferred_language",
         ],
         template=template,
     )
@@ -106,6 +118,7 @@ def create_prompt(
         translation_request=translation_request,
         formality=formality,
         mistakes_request=mistakes_request,
+        preferred_language=preferred_language,
     )
     return prompt_query
 
@@ -118,6 +131,7 @@ def generate_convo(
     translation_on,
     formality,
     highlight_mistakes_on,
+    preferred_language,
 ):
 
     if not vocab.strip():
@@ -139,6 +153,7 @@ def generate_convo(
             translation_on,
             formality,
             highlight_mistakes_on,
+            preferred_language,
         )
 
         prompt_query = create_prompt(
@@ -150,6 +165,7 @@ def generate_convo(
             translation_on,
             formality,
             highlight_mistakes_on,
+            preferred_language,
         )
 
         # Run LLM model
@@ -196,6 +212,7 @@ if submitted:
             translation_on,
             formality,
             highlight_mistakes_on,
+            native_language,
         )
 
 for response in st.session_state["responses"]:

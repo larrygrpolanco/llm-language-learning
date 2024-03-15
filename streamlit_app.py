@@ -13,13 +13,13 @@ st.caption(
 
 with st.sidebar:
     # st.title("Language Settings")
-    sidebar_tab1, sidebar_tab2 = st.tabs(["Settings", "Details"])
+    sidebar_tab1, sidebar_tab2, sidebar_tab3 = st.tabs(["Settings", "Details", "Tools"])
 
     with sidebar_tab1:
         practice_language = st.text_input(
             "Target Language",
-            placeholder="Chinese w/pinyin",
-            help="Enter the language you're learning, e.g., Chinese, Spanish.",
+            placeholder="e.g., Chinese, Spanish.",
+            help="Enter the language you're learning。",
         )
         learner_level = st.select_slider(
             "CEFR Level (Proficiency)",
@@ -53,6 +53,35 @@ with st.sidebar:
             "Show common mistakes",
             help="Check this to show common mistakes learners might make.",
         )
+
+    with sidebar_tab3:
+        st.caption("Advanced Settings")
+        st.caption("Changing these might break the app. Refresh the page to reset.")
+        # LLM Selection
+        llm_choice = st.selectbox(
+            "Choose your Language Model (WIP)",
+            ["Google Generative AI", "Other LLM"],  # Add other LLMs as needed
+            index=0,  # Default to the first option
+            help="Select the Language Model to generate conversations. Some models are not free.",
+        )
+        custom_api_key = st.text_input(
+            "API Key", type="password", help="Use your personal API key."
+        )
+
+        template_editing = st.expander("Edit Prompt Template", expanded=False)
+        with template_editing:
+            user_template = st.text_area(
+                "Edit the template used for generating conversations:",
+                value="""# Example template:
+"Construct a dialogue in {practice_language}, tailored to CEFR level {learner_level}, consisting of 3-5 exchanges. Your task is to weave the target word '{vocab}' into a scenario that fits the theme/context, {conversation_context}. Aim for a {formality} formality register. Begin with a brief description of the scenario in the students preferred_language ({preferred_language}). This setup should establish the theme/context and provide a backdrop for the dialogue. Make sure it's clear and engaging, setting the stage for the language interaction. {mistakes_request} {translation_request} "
+""",
+                height=300,
+                help="Modify the template as needed. This template will be used for generating conversations based on your settings. Do not change the {settings} in curly braces.",
+            )
+            if st.button("Save Template"):
+                # Save the user modified template to session state or use it directly for generation
+                st.session_state["user_template"] = user_template
+                st.success("Template saved successfully!")
 
 
 # Button to clear responses
@@ -151,6 +180,8 @@ def generate_convo(
     formality,
     highlight_mistakes_on,
     preferred_language,
+    llm_choice,
+    custom_api_key,
 ):
 
     if not vocab.strip():
@@ -161,19 +192,35 @@ def generate_convo(
         return None
 
     try:
-        # Instantiate LLM model
-        llm = GoogleGenerativeAI(model="gemini-pro", google_api_key=google_api_key)
+        # Choose the LLM based on user selection
+        if llm_choice == "Google Generative AI":
+            # Use custom API key if provided, otherwise default to the stored API key
+            effective_api_key = (
+                custom_api_key if custom_api_key.strip() else google_api_key
+            )
+            llm = GoogleGenerativeAI(
+                model="gemini-pro", google_api_key=effective_api_key
+            )
+        elif llm_choice == "Other LLM":
+            # Instantiate another LLM here
+            llm = None  # Placeholder for other LLM instantiation
+        else:
+            raise ValueError("Unsupported LLM selected")
 
-        template = refine_template(
-            vocab,
-            practice_language,
-            learner_level,
-            conversation_context,
-            translation_on,
-            formality,
-            highlight_mistakes_on,
-            preferred_language,
-        )
+        # Use the user-modified template if available
+        if "user_template" in st.session_state:
+            template = st.session_state["user_template"]
+        else:
+            template = refine_template(
+                vocab,
+                practice_language,
+                learner_level,
+                conversation_context,
+                translation_on,
+                formality,
+                highlight_mistakes_on,
+                preferred_language,
+            )
 
         prompt_query = create_prompt(
             template,
@@ -232,6 +279,8 @@ if submitted:
             formality,
             highlight_mistakes_on,
             native_language,
+            llm_choice,
+            custom_api_key,
         )
 
 for response in st.session_state["responses"]:

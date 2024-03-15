@@ -15,5 +15,3 @@ Possible future implimitations:
 # highlighted_response = highlight_vocabulary(response, vocab_text)
 
 # st.markdown(highlighted_response, unsafe_allow_html=True)
-
-

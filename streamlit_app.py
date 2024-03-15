@@ -7,6 +7,9 @@ google_api_key = st.secrets["GOOGLE_API_KEY"]
 openai_api_key = st.secrets["OPENAI_API_KEY"]
 
 st.title("Conversation Dictionary")
+st.subheader(
+    "Seeing vocabulary in context helps with understanding how words are used in real sentences, making it easier to grasp meanings and nuances. Exposure also helps with memorizing and correctly applying new vocabulary yourself."
+)
 st.caption(
     "Disclaimer: This dictionary may not always provide perfect translations, contextual examples, or even the correct language; try resubmitting and be prepared to cross-check examples."
 )

@@ -69,6 +69,11 @@ with st.sidebar:
             index=0,  # Default to the first option
             help="Select the Language Model to generate conversations. Some models are not free.",
         )
+        st.divider()
+        custom_api_key = st.text_input(
+            "API Key", type="password", help="Use your personal API key."
+        )
+        st.divider()
 
         template_editing = st.expander("Edit Prompt Template", expanded=False)
         with template_editing:
@@ -84,11 +89,6 @@ with st.sidebar:
                 # Save the user modified template to session state or use it directly for generation
                 st.session_state["user_template"] = user_template
                 st.success("Template saved successfully!")
-
-        custom_api_key = st.text_input(
-            "API Key", type="password", help="Use your personal API key."
-        )
-
 
 # Button to clear responses
 if st.button("Clear All Responses"):

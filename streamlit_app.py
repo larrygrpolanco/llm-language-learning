@@ -6,7 +6,7 @@ from langchain.prompts import PromptTemplate
 google_api_key = st.secrets["GOOGLE_API_KEY"]
 openai_api_key = st.secrets["OPENAI_API_KEY"]
 
-st.title("Conversation Dictionary")
+st.title("Conversation Dictionary", anchor="language-learning.streamlit.app")
 
 st.markdown(
     "Learning new words and phrases in context helps you understand and remember them better."
@@ -52,7 +52,7 @@ with st.sidebar:
         )
         translation_on = st.toggle(
             f"{native_language} explanations",
-            help=f"Check this to request {native_language} translations and explinations.",
+            help=f"Check this to request {native_language} translations and cultural explinations.",
         )
         highlight_mistakes_on = st.toggle(
             "Show common mistakes",

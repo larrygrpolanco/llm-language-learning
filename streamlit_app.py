@@ -7,8 +7,9 @@ google_api_key = st.secrets["GOOGLE_API_KEY"]
 openai_api_key = st.secrets["OPENAI_API_KEY"]
 
 st.title("Conversation Dictionary")
-st.subheader(
-    "Seeing vocabulary in context helps with understanding how words are used in real sentences, making it easier to grasp meanings and nuances. Exposure also helps with memorizing and correctly applying new vocabulary yourself."
+
+st.markdown(
+    "Learning new words and phrases in context helps you understand and remember them better."
 )
 st.caption(
     "Disclaimer: This dictionary may not always provide perfect translations, contextual examples, or even the correct language; try resubmitting and be prepared to cross-check examples."
@@ -23,7 +24,7 @@ with st.sidebar:
         practice_language = st.text_input(
             "Target Language",
             placeholder="e.g., Chinese, Spanish.",
-            help="Enter the language you're learning。",
+            help="Enter the language you're learning.",
         )
         learner_level = st.select_slider(
             "CEFR Level (Proficiency)",
@@ -47,7 +48,7 @@ with st.sidebar:
         native_language = st.text_input(
             "Preferred Language",
             value="English",
-            help="Set the language for the explanations. (Works best with English)",
+            help="Set language for the explanations and translations (works best with English).",
         )
         translation_on = st.toggle(
             f"{native_language} explanations",
@@ -61,7 +62,6 @@ with st.sidebar:
     with sidebar_tab3:
         st.caption("Advanced Settings")
         st.caption("Changing these might break the app. Refresh the page to reset.")
-        st.divider()
         # LLM Selection
         llm_choice = st.selectbox(
             "Choose your Language Model",
@@ -71,7 +71,7 @@ with st.sidebar:
                 # "Meta LLama 2",
             ],  # Add other LLMs as needed
             index=0,  # Default to the first option
-            help="Select the Language Model to generate conversations. Some models are not free.",
+            help="Select the Language Model to generate conversations.",
         )
         st.divider()
         custom_api_key = st.text_input(
@@ -84,7 +84,7 @@ with st.sidebar:
             user_template = st.text_area(
                 "Edit the template used for generating conversations:",
                 value="""# Example template:
-"Construct a dialogue in {practice_language}, tailored to CEFR level {learner_level}, consisting of 3-5 exchanges. Your task is to weave the target word '{vocab}' into a scenario that fits the theme/context, {conversation_context}. Aim for a {formality} formality register. Begin with a brief description of the scenario in the students preferred_language ({preferred_language}). This setup should establish the theme/context and provide a backdrop for the dialogue. Make sure it's clear and engaging, setting the stage for the language interaction. {mistakes_request} {translation_request} "
+"Construct a dialogue in {practice_language}, tailored to CEFR level {learner_level}, consisting of 3-5 exchanges. Your task is to weave the target word '{vocab}' into a scenario that fits the theme/context {conversation_context}. Aim for a {formality} formality register. Begin with a brief description of the scenario in the students preferred_language ({preferred_language}). This setup should establish the theme/context and provide a backdrop for the dialogue. Make sure it's clear and engaging, setting the stage for the language interaction. {mistakes_request} {translation_request} "
 """,
                 height=300,
                 help="Modify the template as needed. This template will be used for generating conversations based on your settings. Do not change the {settings} in curly braces.",
@@ -286,7 +286,7 @@ with st.form("myform"):
     vocab_text = st.text_input(
         "Enter the word or words you want to see used in a conversation:",
         placeholder="Vocabulary",
-        help="Additional option in the sidebar located at the top left",
+        help="Additional options in the sidebar located at the top left",
     )
     submitted = st.form_submit_button("Submit")
 

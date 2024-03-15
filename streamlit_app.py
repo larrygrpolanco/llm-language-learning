@@ -7,7 +7,7 @@ google_api_key = st.secrets["GOOGLE_API_KEY"]
 
 st.title("Conversation Dictionary")
 st.caption(
-    "Disclaimer: This dictionary may not always provide perfect translations or contextual examples; please cross-check and be prepared to explore different usage examples."
+    "Disclaimer: This dictionary may not always provide perfect translations, contextual examples, or even the correct language; try resubmitting be prepared to cross-check with other usage examples."
 )
 
 
@@ -43,7 +43,7 @@ with st.sidebar:
         native_language = st.text_input(
             "Preferred Language",
             value="English",
-            help="Set the language for the explanations.",
+            # help="Set the language for the explanations.",
         )
         translation_on = st.toggle(
             f"{native_language} explanations",

@@ -58,6 +58,7 @@ with st.sidebar:
     with sidebar_tab3:
         st.caption("Advanced Settings")
         st.caption("Changing these might break the app. Refresh the page to reset.")
+        st.divider()
         # LLM Selection
         llm_choice = st.selectbox(
             "Choose your Language Model",

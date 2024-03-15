@@ -110,7 +110,7 @@ def refine_template(
     preferred_language,
 ):
     translation_request = (
-        f"Alongside the dialogue, please provide a translation into the learner's preferred language ({preferred_language}). Emphasize clarity and accuracy in your translation. Where relevant, include brief annotations or explanations to highlight cultural or contextual nuances. These insights should elucidate expressions, idioms, or cultural references that may not directly translate but are crucial for understanding the dialogue's deeper meanings and implications."
+        f"Proivde a translation into the learner's preferred language ({preferred_language}). Emphasize clarity and accuracy in your translation. Where relevant, include brief annotations or explanations to highlight cultural or contextual nuances. These insights should elucidate expressions, idioms, or cultural references that may not directly translate but are crucial for understanding the dialogue's deeper meanings and implications."
         if translation_on
         else "Provide the dialogue with no translations. Focus on ensuring the dialogue is engaging and educational within the parameters set, allowing the learner to immerse fully in the practice language without direct translation. This approach encourages deeper language intuition and context-based understanding."
     )

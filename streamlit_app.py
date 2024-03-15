@@ -1,13 +1,14 @@
 import streamlit as st
-
+from openai import OpenAI
 from langchain_google_genai import GoogleGenerativeAI
 from langchain.prompts import PromptTemplate
 
 google_api_key = st.secrets["GOOGLE_API_KEY"]
+openai_api_key = st.secrets["OPENAI_API_KEY"]
 
 st.title("Conversation Dictionary")
 st.caption(
-    "Disclaimer: This dictionary may not always provide perfect translations, contextual examples, or even the correct language; try resubmitting be prepared to cross-check with other usage examples."
+    "Disclaimer: This dictionary may not always provide perfect translations, contextual examples, or even the correct language; try resubmitting and be prepared to cross-check examples."
 )
 
 
@@ -59,8 +60,12 @@ with st.sidebar:
         st.caption("Changing these might break the app. Refresh the page to reset.")
         # LLM Selection
         llm_choice = st.selectbox(
-            "Choose your Language Model (WIP)",
-            ["Google Generative AI", "Other LLM"],  # Add other LLMs as needed
+            "Choose your Language Model",
+            [
+                "Google Gemini-Pro",
+                "OpenAI ChatGPT 4",
+                "Meta LLama 2",
+            ],  # Add other LLMs as needed
             index=0,  # Default to the first option
             help="Select the Language Model to generate conversations. Some models are not free.",
         )
@@ -102,7 +107,7 @@ def refine_template(
     translation_request = (
         f"Alongside the dialogue, please provide a translation into the learner's preferred language ({preferred_language}). Emphasize clarity and accuracy in your translation. Where relevant, include brief annotations or explanations to highlight cultural or contextual nuances. These insights should elucidate expressions, idioms, or cultural references that may not directly translate but are crucial for understanding the dialogue's deeper meanings and implications."
         if translation_on
-        else "Provide the dialogue without any translation. Focus on ensuring the dialogue is engaging and educational within the parameters set, allowing the learner to immerse fully in the practice language without direct translation. This approach encourages deeper language intuition and context-based understanding."
+        else "Provide the dialogue with no translations. Focus on ensuring the dialogue is engaging and educational within the parameters set, allowing the learner to immerse fully in the practice language without direct translation. This approach encourages deeper language intuition and context-based understanding."
     )
     mistakes_request = (
         f"Identify common errors learners might commit when using the vocabulary word '{vocab}'. Illuminate these mistakes by providing a brief explanation of why they are incorrect. Enhance this learning moment by crafting 2-3 model sentences that demonstrate the correct usage of '{vocab}'. These sentences should not only rectify the identified mistakes but also serve as clear examples for learners to emulate, helping them to internalize the correct application of the word in various contexts."
@@ -117,18 +122,18 @@ Scenario Introduction: Begin with a concise description of the scenario in the l
 
 Dialogue Construction:
 
-Compose 3-5 exchanges between characters, ensuring the dialogue is realistic and relevant to the learners' experiences.
+Compose 3-5 exchanges between characters in {practice_language}, ensuring the dialogue is realistic and relevant to the learners' experiences.
 Integrate the target vocabulary word '{vocab}' naturally into the conversation. Use the word in different forms or contexts if possible to show its versatility.
-Adjust the dialogue to match the specified CEFR level '{learner_level}', considering sentence complexity, vocabulary, and grammatical structures appropriate for that level.
+Adjust the dialogue to match the specified {practice_language} CEFR level '{learner_level}', considering sentence complexity, vocabulary, and grammatical structures appropriate for that level.
 Formality Register: Ensure the dialogue reflects the requested level of formality ('{formality}'). This could range from informal, using colloquial language and contractions, to formal, employing polite forms, professional terminology, and complete sentences.
 
-Dialogue Length and Complexity: Aim for a total word count of approximately 100-150 words for the entire dialogue. This ensures enough content for educational value without overwhelming the learner. Sentences should vary in length and complexity according to the CEFR level specified.
+Dialogue Length and Complexity: Aim for a total word count of approximately 100-150 words for the entire dialogue. This ensures enough {practice_language} content for educational value without overwhelming the learner. Sentences should vary in length and complexity according to the CEFR level specified.
 
-{translation_request}
+Ensure that your {practice_language} dialogue is not only a learning tool but also a means for reflection and deeper engagement with the language. The goal is to make each dialogue a stepping stone towards fluency, providing learners with practical language skills they can apply in real-world situations.
 
 {mistakes_request}
 
-Ensure that your dialogue is not only a learning tool but also a means for reflection and deeper engagement with the language. The goal is to make each dialogue a stepping stone towards fluency, providing learners with practical language skills they can apply in real-world situations.
+{translation_request}
 """
 
     return template
@@ -188,12 +193,12 @@ def generate_convo(
         st.warning("Enter a vocabulary word.")
         return None
     if not practice_language.strip():
-        st.warning("Set your langauge in the sidebar located at the top left.")
+        st.warning("Set your target langauge in the sidebar located at the top left.")
         return None
 
     try:
         # Choose the LLM based on user selection
-        if llm_choice == "Google Generative AI":
+        if llm_choice == "Google Gemini-Pro":
             # Use custom API key if provided, otherwise default to the stored API key
             effective_api_key = (
                 custom_api_key if custom_api_key.strip() else google_api_key
@@ -201,7 +206,14 @@ def generate_convo(
             llm = GoogleGenerativeAI(
                 model="gemini-pro", google_api_key=effective_api_key
             )
-        elif llm_choice == "Other LLM":
+        ### I would need to reorganize how the request is handled to make this work. Right now it keeps everything in english.
+        elif llm_choice == "OpenAI ChatGPT 4":
+            # Use custom API key if provided, otherwise default to the stored API key
+            effective_api_key = (
+                custom_api_key if custom_api_key.strip() else openai_api_key
+            )
+            client = OpenAI(api_key=effective_api_key)
+        elif llm_choice == "Meta LLama 2":
             # Instantiate another LLM here
             llm = None  # Placeholder for other LLM instantiation
         else:
@@ -235,7 +247,14 @@ def generate_convo(
         )
 
         # Run LLM model
-        response = llm(prompt_query)
+        if llm_choice == "Google Gemini-Pro":
+            response = llm(prompt_query)
+        elif llm_choice == "OpenAI ChatGPT 4":
+            gpt_response_json = client.chat.completions.create(
+                messages=[{"role": "user", "content": prompt_query}],
+                model="gpt-4-turbo-preview",
+            )
+            response = gpt_response_json.choices[0].message.content
 
         # Append new response to the start of the list so it appears at the top
         st.session_state["responses"].insert(0, response)

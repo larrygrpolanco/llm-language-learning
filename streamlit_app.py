@@ -29,12 +29,12 @@ with st.sidebar:
         learner_level = st.select_slider(
             "CEFR Level (Proficiency)",
             [
-                "A1 (Beginner)",
-                "A2 (Pre-intermediate)",
-                "B1 (Intermediate)",
-                "B2 (Upper-Intermediate)",
-                "C1 (Advanced)",
-                "C2 (Mastery)",
+                "A1 Beginner",
+                "A2 Pre-intermediate",
+                "B1 Intermediate",
+                "B2 Upper-Intermediate",
+                "C1 Advanced",
+                "C2 Mastery",
             ],
         )
         conversation_context = st.text_area(

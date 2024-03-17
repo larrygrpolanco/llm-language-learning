@@ -9,7 +9,7 @@ openai_api_key = st.secrets["OPENAI_API_KEY"]
 st.title("Conversation Dictionary", anchor="language-learning.streamlit.app")
 
 st.markdown(
-    "Learning new words and phrases in context helps you understand and remember them better."
+    "Learning new words and phrases in context can help you understand and remember them better."
 )
 st.caption(
     "Disclaimer: This dictionary may not always provide perfect translations, contextual examples, or even the correct language; try resubmitting and be prepared to cross-check examples."
@@ -28,7 +28,14 @@ with st.sidebar:
         )
         learner_level = st.select_slider(
             "CEFR Level (Proficiency)",
-            ["A1", "A2", "B1", "B2", "C1", "C2"],
+            [
+                "A1 (Beginner)",
+                "A2 (Pre-intermediate)",
+                "B1 (Intermediate)",
+                "B2 (Upper-Intermediate)",
+                "C1 (Advanced)",
+                "C2 (Mastery)",
+            ],
         )
         conversation_context = st.text_area(
             "Context",

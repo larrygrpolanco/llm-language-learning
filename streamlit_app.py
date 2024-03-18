@@ -18,7 +18,7 @@ st.caption(
 
 with st.sidebar:
     # st.title("Language Settings")
-    sidebar_tab1, sidebar_tab2, sidebar_tab3 = st.tabs(["Settings", "Details", "Tools"])
+    sidebar_tab1, sidebar_tab2, sidebar_tab3 = st.tabs(["Settings", "Extras", "Tools"])
 
     with sidebar_tab1:
         practice_language = st.text_input(
@@ -26,7 +26,7 @@ with st.sidebar:
             placeholder="e.g., Chinese, Spanish.",
             help="Enter the language you're learning.",
         )
-        learner_level = st.select_slider(
+        learner_level = st.selectbox(
             "CEFR Level (Proficiency)",
             [
                 "A1 Beginner",
@@ -42,13 +42,14 @@ with st.sidebar:
             placeholder="Ordering food at a restaurant",
             help="Specify a context to focus the conversation, e.g., ordering at a restaurant, asking for directions.",
         )
-        formality = st.selectbox(
+        formality = st.select_slider(
             "Formality",
             [
-                "Balanced",
                 "Informal",
+                "Balanced",
                 "Formal",
             ],
+            value="Balanced",
         )
 
     with sidebar_tab2:
@@ -271,7 +272,7 @@ def generate_convo(
         st.session_state["responses"].insert(0, response)
 
         # Limit the number of responses to a specific max value
-        max_responses = 3
+        max_responses = 5
         if len(st.session_state["responses"]) > max_responses:
             # Remove the oldest response(s) to maintain only a max number of responses
             st.session_state["responses"] = st.session_state["responses"][

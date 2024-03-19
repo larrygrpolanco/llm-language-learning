@@ -114,7 +114,7 @@ with st.sidebar:
             help="Select the Language Model to generate conversations.",
         )
         practice_language = st.text_input(
-            label="Translation Language", help="No color coding."
+            label="Translation Language", help="Experimental."
         )
 
 
@@ -125,8 +125,10 @@ tab1, tab2 = st.tabs(["Converter", "Info"])
 with tab2:
     st.subheader("How does this work?")
 
-    with st.expander("Pedagogy on text simplification"):
-        st.markdown("Prompt dynamically changes depending on settings and is based on pedagogical guidelines and suggestions for text simplification by Ret et al., (2022).")
+    with st.expander("Prompting and Pedagogy"):
+        st.markdown(
+            "Prompt dynamically changes depending on settings. Prompts are based on pedagogical guidelines and suggestions for text simplification by Ret et al., (2022)."
+        )
         st.markdown(
             """
 1. Choose vocabulary that has more common usage in English.
@@ -156,8 +158,9 @@ E.g., change ‘those at sea’ to ‘sailors’
 E.g., change ‘although he tried to. he was unable to do so’ to ‘he was unsuccessful in. although he tried’.
                     """
         )
-        st.caption("Rets, I., Astruc, L., Coughlan, T., & Stickler, U. (2022). Approaches to simplifying academic texts in English: English teachers’ views and practices. English for Specific Purposes, 68, 31-46.")
-
+        st.caption(
+            "Rets, I., Astruc, L., Coughlan, T., & Stickler, U. (2022). Approaches to simplifying academic texts in English: English teachers’ views and practices. English for Specific Purposes, 68, 31-46."
+        )
 
     with st.expander("BNC/COCA Word Lists"):
         st.markdown(

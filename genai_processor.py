@@ -64,7 +64,7 @@ class LanguageModelProcessor:
 
         Compose 3-5 exchanges between characters in {practice_language}, ensuring the dialogue is realistic and relevant to the learners' experiences.
         Integrate the target vocabulary word '{vocab}' naturally into the conversation. Use the word in different forms or contexts if possible to show its versatility.
-        Adjust the dialogue to match the specified {practice_language} CEFR level '{slearner_level}', considering sentence complexity, vocabulary, and grammatical structures appropriate for that level.
+        Adjust the dialogue to match the specified {practice_language} CEFR level '{learner_level}', considering sentence complexity, vocabulary, and grammatical structures appropriate for that level.
         Formality Register: Ensure the dialogue reflects the requested level of formality ('{formality}'). This could range from informal, using colloquial language and contractions, to formal, employing polite forms, professional terminology, and complete sentences.
 
         Dialogue Length and Complexity: Aim for a total word count of approximately 100-150 words for the entire dialogue. This ensures enough {practice_language} content for educational value without overwhelming the learner. Sentences should vary in length and complexity according to the CEFR level specified.

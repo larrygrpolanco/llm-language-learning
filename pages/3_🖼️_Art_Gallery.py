@@ -61,7 +61,7 @@ st.page_link("Welcome.py", label="Home", icon="🏠")
 
 st.title("🖼️ Reading Art (Gallery)")
 
-st.subheader("Try to recreate a pieces of 'art' by describing them.")
+st.subheader("Try to recreate pieces of 'art' by describing them.")
 st.markdown(
     "Language is only one meaning making system among many including painting, music, and dance. There are so many forms of literacy and reading images is one of them."
 )

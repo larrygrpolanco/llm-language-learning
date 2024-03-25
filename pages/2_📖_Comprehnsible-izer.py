@@ -201,11 +201,11 @@ with tab1:
             value=True,
             help="Color words by difficuty (key in top left sidebar).",
         )
-        future_feature = st.toggle(
-            "Future feature",
-            value=False,
-            help="Coming soon",
-        )
+        # future_feature = st.toggle(
+        #     "Future feature",
+        #     value=False,
+        #     help="Coming soon",
+        # )
 
     with col2:
         with st.form("myform"):
@@ -217,7 +217,7 @@ with tab1:
             submitted = st.form_submit_button("Submit")
 
 
-if st.button("Clear All Responses"):
+if st.button("Clear All"):
     st.session_state["response_history"] = []  # Reset the list of responses
 
 

@@ -4,7 +4,7 @@ from genai_processor import LanguageModelProcessor, ChatGPTProcessor, GeminiProc
 st.title("💬 Conversation Dictionary", anchor="language-learning.streamlit.app")
 
 st.markdown(
-    "Learning new words and phrases in context can help you understand and remember them better."
+    "Have a word you want to see used in a conversation? Learning new words and phrases in context can help you understand and remember them better."
 )
 st.caption(
     "Disclaimer: This dictionary may not always provide perfect translations, contextual examples, or even the correct language; try resubmitting and be prepared to cross-check examples."

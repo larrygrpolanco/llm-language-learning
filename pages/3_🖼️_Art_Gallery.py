@@ -8,7 +8,7 @@ class ArtGallery:
         self.client = OpenAI(api_key=openai_api_key)
 
     def generate_image_prompt(self, style):
-        system_instructions = f"Craft Dall-E prompt for easily recognizable paintings in {style} style, for an image description game for English learners. Focus on a clear, simple noun (thing, or animal), avoid people. Use straightforward English and easy vocabulary to aid guessing and understanding, as if explaining the art to someone who hasn't seen it. Follow these steps. Step 1: Provide a descriptive title. Step 2: Provide a simple but comprehensive description of what is happening in the painting in 15 words or less"
+        system_instructions = f"Craft Dall-E prompt for easily recognizable paintings in {style} style, for an image description game for English learners. Focus on a clear, simple noun (thing, or animal), avoid people. Use straightforward English and easy vocabulary to aid guessing and understanding, as if explaining the art to someone who hasn't seen it. Follow these steps. Step 1: Provide a descriptive title. Step 2: Provide a simple but comprehensive description of what is happening in the painting in 15 words or less. Do not list steps."
 
         user_prompt = "Create an art gallery piece scene description."
 

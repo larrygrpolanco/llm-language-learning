@@ -57,7 +57,7 @@ with col2:
     st.title("Games")
     st.page_link("pages/3_🖼️_Art_Gallery.py", label="Art Gallery", icon="🖼️")
     with st.expander("Reading Art (Gallery)"):
-        st.markdown("Try to recreate a pieces of 'art' by describing them.")
+        st.markdown("Try to recreate pieces of 'art' by describing them.")
 
         st.caption(
             "* Unsworth, L. (2014). Multiliteracies and Metalanguage:: Describing Image/Text Relations as a Resource for Negotiating Multimodal Texts. In Handbook of research on new literacies (pp. 377-406). Routledge."

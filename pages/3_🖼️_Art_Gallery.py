@@ -78,9 +78,7 @@ with st.expander("Instructions"):
     st.caption(
         "4. You can always click the 'show desciption button to see the orginal description."
     )
-    st.caption(
-        "The goal is not get the same painting, as you will get a different painting every time, the point is to play with and examine how language describes art."
-    )
+
 
 art_gallery = ArtGallery(st.secrets["OPENAI_API_KEY"])
 
@@ -117,7 +115,7 @@ choosen_style = st.selectbox(
         "Futurism",
         "Harlem Renaissance",
     ],
-    help="Paintings may not always follow this style.",
+    help="Changing style will also change the types of descriptions. Some styles are harder than others.",
 )
 
 style_characteristics = {
@@ -165,6 +163,9 @@ if st.button("Enter New Gallery"):
 
 if st.session_state["gallery_entered"]:
     st.divider()
+    st.caption(
+        "The goal is not get the same painting, but to play with and examine how language describes art."
+    )
     # New Prompt Generation
     col1, col2 = st.columns(2)
 

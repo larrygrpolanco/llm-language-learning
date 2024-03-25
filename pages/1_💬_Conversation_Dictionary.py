@@ -1,6 +1,9 @@
 import streamlit as st
 from genai_processor import LanguageModelProcessor, ChatGPTProcessor, GeminiProcessor
 
+st.page_link("Welcome.py", label="Home", icon="🏠")
+
+
 st.title("💬 Conversation Dictionary", anchor="language-learning.streamlit.app")
 
 st.markdown(

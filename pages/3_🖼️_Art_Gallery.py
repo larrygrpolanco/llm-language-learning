@@ -8,17 +8,9 @@ class ArtGallery:
         self.client = OpenAI(api_key=openai_api_key)
 
     def generate_image_prompt(self, style):
-        system_instructions = (
-            "Imagine you are creating prompts for Dall-E to generate paintings. The topic and theme of the art piece should be intersting and unique, but easy to guess. The topic should be common topics found in {style} style paintings."
-            "These prompts will be used in an image reading/describing game for English language learners. "
-            "Generate a prompt that describes an art piece. Include an noun (person, thing, or animal) as the main object."
-            "Use basic English to make it easy for beginners to understand and guess. Avoid adjectives. "
-            "Think of a very simple descriptions someone would use to describe a piece of art they saw in a gallery"
-        )
+        system_instructions = f"Craft Dall-E prompt for easily recognizable paintings in {style} style, for an image description game for English learners. Focus on a clear, simple noun (thing, or animal), avoid people. Use straightforward English and easy vocabulary to aid guessing and understanding, as if explaining the art to someone who hasn't seen it. Follow these steps. Step 1: Provide a descriptive title. Step 2: Provide a simple but comprehensive description of what is happening in the painting in 15 words or less"
 
-        user_prompt = (
-            "Create an art gallery piece scene description in 10 words or less."
-        )
+        user_prompt = "Create an art gallery piece scene description."
 
         try:
             response = openai.chat.completions.create(
@@ -30,7 +22,7 @@ class ArtGallery:
                     },
                     {"role": "user", "content": user_prompt},
                 ],
-                max_tokens=30,
+                max_tokens=50,
                 temperature=0.9,
             )
 
@@ -64,9 +56,12 @@ class ArtGallery:
             print(e.error)
 
 
+st.page_link("Welcome.py", label="Home", icon="🏠")
+
+
 st.title("🖼️ Reading Art (Gallery)")
 
-st.subheader("Try to recreate a piece of 'art' by describing it.")
+st.subheader("Try to recreate a pieces of 'art' by describing them.")
 st.markdown(
     "Language is only one meaning making system among many including painting, music, and dance. There are so many forms of literacy and reading images is one of them."
 )
@@ -75,9 +70,7 @@ st.markdown(
 # )
 
 with st.expander("Instructions"):
-    st.caption(
-        "1. Select a style and click 'Enter Gallery' to begin and set the theme."
-    )
+    st.caption("1. Select a style and click 'Enter Gallery' to begin.")
     st.caption(
         "2. Click 'See paintings' to create a paintings based off the secret gallery description."
     )
@@ -124,20 +117,21 @@ choosen_style = st.selectbox(
         "Futurism",
         "Harlem Renaissance",
     ],
+    help="Paintings may not always follow this style.",
 )
 
 style_characteristics = {
-    "Renaissance": "Focused on the revival of classical culture, emphasizing humanism, proportion, perspective, and the realistic depiction of the human body.",
-    "Abstract Expressionism": "Emphasizes spontaneous, automatic, or subconscious creation with abstract forms and an emphasis on dynamic, gestural brushwork.",
-    "Art Deco": "Known for its bold geometric shapes, rich colors, and lavish ornamentation, reflecting the modernity of the machine age.",
-    "Art Nouveau": "Characterized by its use of long, sinuous, organic lines and was often inspired by natural forms.",
-    "Avant-garde": "Refers to the innovative, experimental, and unconventional works or artists that push the boundaries of what is accepted as the norm or the status quo.",
-    "Baroque": "Features dramatic use of light and shadow, rich colors, and grandeur, often with a sense of movement and emotional intensity.",
-    "Classicism": "Emphasizes harmony, proportion, and disciplined expression, inspired by the art and culture of ancient Greece and Rome.",
-    "Digital Art": "Artistic work or practice that uses digital technology as part of the creative or presentation process.",
-    "Expressionism": "Seeks to express emotional experience rather than impressions of the external world, often through distorted, exaggerated, and vivid imagery.",
-    "Futurism": "Focused on the dynamic quality of modern technological life, emphasizing speed, movement, and the machine as art.",
-    "Harlem Renaissance": "A cultural movement that celebrated African American cultural, social, and artistic expressions, flourishing in the 1920s and 1930s in Harlem, New York.",
+    "Renaissance": "Realistic, detailed, perspective-focused",
+    "Abstract Expressionism": "Spontaneous, emotional, non-representational",
+    "Art Deco": "Geometric, streamlined, decorative",
+    "Art Nouveau": "Flowing, organic, ornamental",
+    "Avant-garde": "Innovative, non-traditional, experimental",
+    "Baroque": "Dramatic, intense, detailed",
+    "Classicism": "Harmonious, proportionate, idealized",
+    "Digital Art": "Pixel-based, computer-generated, versatile",
+    "Expressionism": "Distorted, subjective, emotive",
+    "Futurism": "Dynamic, mechanical, motion-focused",
+    "Harlem Renaissance": "Cultural, vibrant, expressive",
 }
 
 choosen_style_characteristics = style_characteristics[choosen_style]
@@ -149,9 +143,24 @@ if st.button("Enter New Gallery"):
     st.session_state["ai_art_works_descriptions"] = []
     st.session_state["player_arts_descriptions"] = []
 
-    new_prompt = art_gallery.generate_image_prompt(style=choosen_style)
-    if new_prompt:  # Ensure there's a new prompt
-        st.session_state.ai_art_works_descriptions.append(new_prompt)
+    with st.spinner("Curating gallery..."):
+        new_prompt = art_gallery.generate_image_prompt(style=choosen_style)
+        if new_prompt:  # Ensure there's a new prompt
+            st.session_state.ai_art_works_descriptions.append(new_prompt)
+
+    with st.spinner("Hanging up paintings..."):
+        if st.session_state.ai_art_works_descriptions:
+            prompt = st.session_state.ai_art_works_descriptions[
+                -1
+            ]  # Use the latest prompt
+            # Append the new artwork URL to the session state list
+            st.session_state.ai_art_works.append(
+                art_gallery.generate_artwork(
+                    prompt,
+                    style=choosen_style,
+                    style_characteristics=choosen_style_characteristics,
+                )
+            )
 
 
 if st.session_state["gallery_entered"]:
@@ -161,7 +170,7 @@ if st.session_state["gallery_entered"]:
 
     with col1:
 
-        if st.button("See Paintings"):
+        if st.button("See More Paintings"):
             if st.session_state.ai_art_works_descriptions:
                 prompt = st.session_state.ai_art_works_descriptions[
                     -1
@@ -180,18 +189,16 @@ if st.session_state["gallery_entered"]:
             help="Show the prompt to check to see if your description was close.",
         ):
             if st.session_state.ai_art_works_descriptions:
-                st.markdown(
-                    f"**Description:** {st.session_state.ai_art_works_descriptions[-1]}"
-                )
+                st.markdown(f"{st.session_state.ai_art_works_descriptions[-1]}")
             else:
                 st.write("No description available. Generate a new prompt.")
 
     with col2:
         player_description = st.text_input(
             "Describe what you see",
-            placeholder="Lady with her hands crossed kind of smiling ",
+            placeholder="Lady with her hands crossed kind of smiling",
         )
-        if st.button("submit"):
+        if st.button("Create Painting"):
             # Append the new artwork to the session state list
             st.session_state.player_arts.append(
                 art_gallery.generate_artwork(

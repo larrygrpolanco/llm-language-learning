@@ -35,6 +35,9 @@ class ColorCoder:
 
 color_coder = ColorCoder(freq_colored_dict)
 
+st.page_link("Welcome.py", label="Home", icon="🏠")
+
+
 st.title("📖 Comprehensible-izer", anchor="language-learning.streamlit.app")
 
 st.markdown(
@@ -125,6 +128,65 @@ tab1, tab2 = st.tabs(["Converter", "Info"])
 with tab2:
     st.subheader("How does this work?")
 
+    with st.expander("Word Frequency Key"):
+
+        # HTML template for displaying each color with text
+        color_template = """
+        <div style='display: flex; align-items: center; margin-bottom: 10px;'>
+            <div style='width: 20px; height: 20px; background-color: {}; margin-right: 10px;'></div>
+            <span>{}</span>
+        </div>
+        """
+
+        # Dictionary of difficulty levels with their corresponding colors and adjusted descriptions
+        difficulty_levels = {
+            "1K": {
+                "color": "#78AB46",
+                "description": "Very common words you likely know.",
+            },
+            "2K": {
+                "color": "#3498DB",
+                "description": "Common words you probably know.",
+            },
+            "3K-4K": {
+                "color": "#F1C40F",
+                "description": "Fairly common words you might know.",
+            },
+            "5K-6K": {
+                "color": "#E67E22",
+                "description": "Less common, might be challenging.",
+            },
+            "7K-8K": {
+                "color": "#E74C3C",
+                "description": "Uncommon words that are more challenging.",
+            },
+            "9K-10K": {
+                "color": "#9B59B6",
+                "description": "Rare words that will be challenging.",
+            },
+            "11K+": {
+                "color": "#34495E",
+                "description": "Rare words, possibly very difficult.",
+            },
+        }
+
+        # Loop through the dictionary and display each color with its description in the sidebar
+        for level, info in difficulty_levels.items():
+            color_block = color_template.format(
+                info["color"], f"{level}: {info['description']}"
+            )
+            st.markdown(color_block, unsafe_allow_html=True)
+
+    with st.expander("BNC/COCA Word Lists"):
+        st.markdown(
+            "This color-coded key represents word difficulty based on their frequency in Paul Nation's BNC/COCA word family lists, which categorize word families based on frequency from the 1st to the 25th most frequent 1,000-word families, with colors ranging from green, the most common 1,000 word families in English, to black, words beyond the 6,000 most common word families."
+        )
+
+    with st.expander("Word Families"):
+        st.markdown(
+            "A word family is a common unit of measurement in when trying to count vocabulay size. It has a base form (e.g., fault), its inflected forms (e.g., faults, faulted, faulting), and closely related derived forms (e.g., faultless, faultlessly, faulty, unfaulty)."
+        )
+
     with st.expander("Prompting and Pedagogy"):
         st.markdown(
             "Prompt dynamically changes depending on settings. Prompts are based on pedagogical guidelines and suggestions for text simplification by Ret et al., (2022)."
@@ -162,15 +224,6 @@ E.g., change ‘although he tried to. he was unable to do so’ to ‘he was uns
             "Rets, I., Astruc, L., Coughlan, T., & Stickler, U. (2022). Approaches to simplifying academic texts in English: English teachers’ views and practices. English for Specific Purposes, 68, 31-46."
         )
 
-    with st.expander("BNC/COCA Word Lists"):
-        st.markdown(
-            "This color-coded key represents word difficulty based on their frequency in Paul Nation's BNC/COCA word family lists, which categorize word families based on frequency from the 1st to the 25th most frequent 1,000-word families, with colors ranging from green, the most common 1,000 word families in English, to black, words beyond the 6,000 most common word families."
-        )
-
-    with st.expander("Word Families"):
-        st.markdown(
-            "A word family is a common unit of measurement in when trying to count vocabulay size. It has a base form (e.g., fault), its inflected forms (e.g., faults, faulted, faulting), and closely related derived forms (e.g., faultless, faultlessly, faulty, unfaulty)."
-        )
 
 
 with tab1:

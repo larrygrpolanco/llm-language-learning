@@ -6,6 +6,7 @@ st.set_page_config(
     page_icon="👋",
 )
 
+
 st.title("Welcome! 👋", anchor="language-learning.streamlit.app")
 
 st.markdown("Hello, my name is Larry Grullon-Polanco. I am a langauge teacher.")
@@ -13,17 +14,23 @@ st.markdown(
     "These are projects where I try to combine second language acquisition research and pedagogy with large language models like ChatGPT and Gemini."
 )
 
+
 st.divider()
 
 # st.subheader("Refrences")
 col1, col2 = st.columns(2)
 with col1:
     st.title("Tools")
+    st.page_link(
+        "pages/1_💬_Conversation_Dictionary.py",
+        label="Conversation Dictionary",
+        icon="💬",
+    )
     with st.expander("Conversation Dictionary"):
+        st.markdown("Have a word you want to see used in conversation?")
         st.markdown(
-            "Have a word you want to see used in conversation?"
+            "Learning new words and phrases in context can help you understand and remember them better."
         )
-        st.markdown("Learning new words and phrases in context can help you understand and remember them better.")
         st.caption(
             "* Malone, J. (2018). Incidental vocabulary learning in SLA: Effects of frequency, aural enhancement, and working memory. Studies in Second Language Acquisition, 40(3), 651-675."
         )
@@ -31,6 +38,9 @@ with col1:
             "* Laufer, B. (2009). Second language vocabulary acquisition from language input and from form-focused activities. Language teaching, 42(3), 341-354."
         )
 
+    st.page_link(
+        "pages/2_📖_Comprehnsible-izer.py", label="Comprehnsible-izer", icon="📖"
+    )
     with st.expander("Comprehensible-izer"):
         st.markdown(
             "Reword sentences or passages to make them more comprehensible and appropriate for your level."
@@ -45,12 +55,13 @@ with col1:
 
 with col2:
     st.title("Games")
+    st.page_link("pages/3_🖼️_Art_Gallery.py", label="Art Gallery", icon="🖼️")
     with st.expander("Reading Art (Gallery)"):
-        st.markdown("Try to recreate a piece of 'art' by describing it.")
+        st.markdown("Try to recreate a pieces of 'art' by describing them.")
 
         st.caption(
-            "Unsworth, L. (2014). Multiliteracies and Metalanguage:: Describing Image/Text Relations as a Resource for Negotiating Multimodal Texts. In Handbook of research on new literacies (pp. 377-406). Routledge."
+            "* Unsworth, L. (2014). Multiliteracies and Metalanguage:: Describing Image/Text Relations as a Resource for Negotiating Multimodal Texts. In Handbook of research on new literacies (pp. 377-406). Routledge."
         )
         st.caption(
-            "Leu, D. J., Kinzer, C. K., Coiro, J. L., & Cammack, D. W. (2004). Toward a theory of new literacies emerging from the Internet and other information and communication technologies. Theoretical models and processes of reading, 5(1), 1570-1613."
+            "* Leu, D. J., Kinzer, C. K., Coiro, J. L., & Cammack, D. W. (2004). Toward a theory of new literacies emerging from the Internet and other information and communication technologies. Theoretical models and processes of reading, 5(1), 1570-1613."
         )

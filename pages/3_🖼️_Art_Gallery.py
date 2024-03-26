@@ -62,21 +62,20 @@ st.page_link("Welcome.py", label="Home", icon="🏠")
 st.title("🖼️ Reading Art (Gallery)")
 
 st.subheader("Try to recreate pieces of 'art' by describing them.")
-st.markdown(
-    "Language is only one meaning making system among many including painting, music, and dance. There are so many forms of literacy and reading images is one of them."
-)
+# st.markdown(
+#     "Language is only one meaning making system among many including painting, music, and dance. There are so many forms of literacy and reading images is one of them."
+# )
 # st.markdown(
 #     "the changing constructions of literacy within new technologies will require all of us to keep up with these changes and to prepare students for a vastly different conception of what it means to become literate (Leu et al., 2004, p. 1591)."
 # )
 
 with st.expander("Instructions"):
-    st.caption("1. Select a style and click 'Enter Gallery' to begin.")
+    st.caption("Select a style and click 'Enter New Gallery' to begin.")
     st.caption(
-        "2. Click 'See paintings' to create a paintings based off the secret gallery description."
+        "Try to recreate a similar painting by 'describing what you see'. Click 'See More paintings' to create a paintings based off the gallery description."
     )
-    st.caption("3. Try to recreate the painting by 'describing what you see'.")
     st.caption(
-        "4. You can always click the 'show desciption button to see the orginal description."
+        "Tip: You can always click the 'show desciption button to see the orginal description."
     )
 
 
@@ -162,6 +161,33 @@ if st.button("Enter New Gallery"):
 
 
 if st.session_state["gallery_entered"]:
+
+    st.divider()
+
+    paint_ai, paint_player = st.columns(2)
+
+    # Displaying the gallery using session state lists
+    with paint_ai:
+        st.subheader("Gallery")
+        # Reverse the list for display
+        for ai_art_work in reversed(st.session_state.ai_art_works):
+            st.image(ai_art_work)
+        if not st.session_state.ai_art_works:
+            st.write("Waiting for player to generate AI artwork...")
+
+        if st.button("Leave this gallery"):
+            st.session_state["gallery_entered"] = False
+            st.caption("Are you sure?")
+            st.caption("Click again to confirm.")
+
+    with paint_player:
+        st.subheader("Your Paintings")
+        # Reverse the list for display
+        for player_art in reversed(st.session_state.player_arts):
+            st.image(player_art)
+        if not st.session_state.player_arts:
+            st.write("Waiting for player to submit description...")
+    
     st.divider()
     st.caption(
         "The goal is not get the same painting, but to play with and examine how language describes art."
@@ -209,28 +235,3 @@ if st.session_state["gallery_entered"]:
                 )
             )
 
-    st.divider()
-
-    paint_ai, paint_player = st.columns(2)
-
-    # Displaying the gallery using session state lists
-    with paint_ai:
-        st.subheader("Gallery")
-        # Reverse the list for display
-        for ai_art_work in reversed(st.session_state.ai_art_works):
-            st.image(ai_art_work)
-        if not st.session_state.ai_art_works:
-            st.write("Waiting for player to generate AI artwork...")
-
-        if st.button("Leave this gallery"):
-            st.session_state["gallery_entered"] = False
-            st.caption("Are you sure?")
-            st.caption("Click again to confirm.")
-
-    with paint_player:
-        st.subheader("Your Paintings")
-        # Reverse the list for display
-        for player_art in reversed(st.session_state.player_arts):
-            st.image(player_art)
-        if not st.session_state.player_arts:
-            st.write("Waiting for player to submit description...")

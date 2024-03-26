@@ -43,9 +43,9 @@ st.title("📖 Comprehensible-izer", anchor="language-learning.streamlit.app")
 st.markdown(
     "Reword sentences or passages to make them more comprehensible and appropriate for your level."
 )
-st.caption(
-    "Disclaimer: While the color coding will always be consistent, the rewording may vary and could be completely wrong. Always double check and try resubmitting if you are not sure."
-)
+# st.caption(
+#     "Disclaimer: While the color coding will always be consistent, the rewording may vary and could be completely wrong. Always double check and try resubmitting if you are not sure."
+# )
 
 with st.sidebar:
     (

@@ -11,7 +11,7 @@ st.title("Welcome! 👋", anchor="language-learning.streamlit.app")
 
 st.markdown("Hello, my name is Larry Grullon-Polanco. I am a langauge teacher.")
 st.markdown(
-    "These are projects where I try to combine second language acquisition research and pedagogy with LLM-assisted programs."
+    "These are projects where I try to combine second language acquisition research and pedagogy with LLMs like ChatGPT and Gemini."
 )
 
 
